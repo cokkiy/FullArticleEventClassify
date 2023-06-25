@@ -1,0 +1,1076 @@
+[
+    {
+        "id": "5",
+        "event_list": [
+            {
+                "event_type": "Conflict",
+                "trigger": {
+                    "text": "打击",
+                    "offset": [
+                        3,
+                        5
+                    ]
+                },
+                "arguments": [
+                    {
+                        "role": "Location",
+                        "text": "阿富汗境内",
+                        "offset": [
+                            5,
+                            10
+                        ]
+                    },
+                    {
+                        "role": "Object",
+                        "text": "本拉登",
+                        "offset": [
+                            14,
+                            17
+                        ]
+                    },
+                    {
+                        "role": "Subject",
+                        "text": "英国",
+                        "offset": [
+                            24,
+                            26
+                        ]
+                    }
+                ]
+            },
+            {
+                "event_type": "Conflict",
+                "trigger": {
+                    "text": "打击",
+                    "offset": [
+                        3,
+                        5
+                    ]
+                },
+                "arguments": [
+                    {
+                        "role": "Location",
+                        "text": "阿富汗境内",
+                        "offset": [
+                            5,
+                            10
+                        ]
+                    },
+                    {
+                        "role": "",
+                        "text": "",
+                        "offset": []
+                    },
+                    {
+                        "role": "Subject",
+                        "text": "英国",
+                        "offset": [
+                            76,
+                            78
+                        ]
+                    }
+                ]
+            },
+            {
+                "event_type": "Deploy",
+                "trigger": {
+                    "text": "部署",
+                    "offset": [
+                        102,
+                        104
+                    ]
+                },
+                "arguments": [
+                    {
+                        "role": "Militaryforce",
+                        "text": "特拉法尔加号",
+                        "offset": [
+                            56,
+                            62
+                        ]
+                    },
+                    {
+                        "role": "Subject",
+                        "text": "英国",
+                        "offset": [
+                            76,
+                            78
+                        ]
+                    }
+                ]
+            },
+            {
+                "event_type": "Conflict",
+                "trigger": {
+                    "text": "攻击",
+                    "offset": [
+                        248,
+                        250
+                    ]
+                },
+                "arguments": [
+                    {
+                        "role": "Subject",
+                        "text": "英国海军",
+                        "offset": [
+                            209,
+                            213
+                        ]
+                    },
+                    {
+                        "role": "Object",
+                        "text": "南斯拉夫境内目标",
+                        "offset": [
+                            250,
+                            255
+                        ]
+                    },
+                    {
+                        "role": "Location",
+                        "text": "南斯拉夫境内",
+                        "offset": [
+                            250,
+                            256
+                        ]
+                    }
+                ]
+            },
+            {
+                "event_type": "Conflict",
+                "trigger": {
+                    "text": "攻击",
+                    "offset": [
+                        248,
+                        250
+                    ]
+                },
+                "arguments": [
+                    {
+                        "role": "Subject",
+                        "text": "英国海军",
+                        "offset": [
+                            209,
+                            213
+                        ]
+                    },
+                    {
+                        "role": "Date",
+                        "text": "1999年",
+                        "offset": [
+                            223,
+                            228
+                        ]
+                    },
+                    {
+                        "role": "Object",
+                        "text": "南斯拉夫境内目标",
+                        "offset": [
+                            250,
+                            258
+                        ]
+                    },
+                    {
+                        "role": "Location",
+                        "text": "南斯拉夫境内",
+                        "offset": [
+                            250,
+                            256
+                        ]
+                    }
+                ]
+            },
+            {
+                "event_type": "Conflict",
+                "trigger": {
+                    "text": "冷战",
+                    "offset": [
+                        278,
+                        280
+                    ]
+                },
+                "arguments": [
+                    {
+                        "role": "Subject",
+                        "text": "英国",
+                        "offset": [
+                            262,
+                            264
+                        ]
+                    },
+                    {
+                        "role": "Date",
+                        "text": "冷战时期",
+                        "offset": [
+                            278,
+                            282
+                        ]
+                    },
+                    {
+                        "role": "Object",
+                        "text": "前苏联",
+                        "offset": [
+                            283,
+                            286
+                        ]
+                    },
+                    {
+                        "role": "Location",
+                        "text": "地中海",
+                        "offset": [
+                            293,
+                            296
+                        ]
+                    }
+                ]
+            },
+            {
+                "event_type": "Conflict",
+                "trigger": {
+                    "text": "对抗",
+                    "offset": [
+                        297,
+                        299
+                    ]
+                },
+                "arguments": [
+                    {
+                        "role": "Subject",
+                        "text": "英国",
+                        "offset": [
+                            76,
+                            78
+                        ]
+                    },
+                    {
+                        "role": "Date",
+                        "text": "冷战时期",
+                        "offset": [
+                            278,
+                            282
+                        ]
+                    },
+                    {
+                        "role": "Object",
+                        "text": "前苏联",
+                        "offset": [
+                            283,
+                            286
+                        ]
+                    },
+                    {
+                        "role": "Location",
+                        "text": "地中海",
+                        "offset": [
+                            293,
+                            296
+                        ]
+                    }
+                ]
+            },
+            {
+                "event_type": "Conflict",
+                "trigger": {
+                    "text": "对抗",
+                    "offset": [
+                        297,
+                        299
+                    ]
+                },
+                "arguments": [
+                    {
+                        "role": "Subject",
+                        "text": "英国",
+                        "offset": [
+                            76,
+                            78
+                        ]
+                    },
+                    {
+                        "role": "Date",
+                        "text": "冷战时期",
+                        "offset": [
+                            278,
+                            282
+                        ]
+                    },
+                    {
+                        "role": "Object",
+                        "text": "前苏联",
+                        "offset": [
+                            283,
+                            286
+                        ]
+                    },
+                    {
+                        "role": "Location",
+                        "text": "北大西洋",
+                        "offset": [
+                            288,
+                            292
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "6",
+        "event_list": [
+            {
+                "event_type": "Experiment",
+                "trigger": {
+                    "text": "评估",
+                    "offset": [
+                        78,
+                        80
+                    ]
+                },
+                "arguments": [
+                    {
+                        "role": "Subject",
+                        "text": "英国皇家海军",
+                        "offset": [
+                            18,
+                            24
+                        ]
+                    },
+                    {
+                        "role": "Equipment",
+                        "text": "钻石号",
+                        "offset": [
+                            2,
+                            5
+                        ]
+                    },
+                    {
+                        "role": "Location",
+                        "text": "朴次茅斯附近",
+                        "offset": [
+                            59,
+                            65
+                        ]
+                    }
+                ]
+            },
+            {
+                "event_type": "Experiment",
+                "trigger": {
+                    "text": "海试",
+                    "offset": [
+                        263,
+                        265
+                    ]
+                },
+                "arguments": [
+                    {
+                        "role": "Subject",
+                        "text": "英国皇家海军",
+                        "offset": [
+                            18,
+                            24
+                        ]
+                    },
+                    {
+                        "role": "Equipment",
+                        "text": "钻石号",
+                        "offset": [
+                            168,
+                            171
+                        ]
+                    },
+                    {
+                        "role": "Location",
+                        "text": "朴次茅斯附近",
+                        "offset": [
+                            59,
+                            65
+                        ]
+                    }
+                ]
+            },
+            {
+                "event_type": "Experiment",
+                "trigger": {
+                    "text": "海试",
+                    "offset": [
+                        263,
+                        265
+                    ]
+                },
+                "arguments": [
+                    {
+                        "role": "Subject",
+                        "text": "英国皇家海军",
+                        "offset": [
+                            18,
+                            24
+                        ]
+                    },
+                    {
+                        "role": "Equipment",
+                        "text": "舰龙号",
+                        "offset": [
+                            242,
+                            245
+                        ]
+                    }
+                ]
+            },
+            {
+                "event_type": "Deploy",
+                "trigger": {
+                    "text": "部署",
+                    "offset": [
+                        227,
+                        229
+                    ]
+                },
+                "arguments": [
+                    {
+                        "role": "Subject",
+                        "text": "英国皇家海军",
+                        "offset": [
+                            18,
+                            24
+                        ]
+                    },
+                    {
+                        "role": "Militaryforce",
+                        "text": "钻石号",
+                        "offset": [
+                            168,
+                            171
+                        ]
+                    },
+                    {
+                        "role": "Date",
+                        "text": "2012年",
+                        "offset": [
+                            220,
+                            225
+                        ]
+                    }
+                ]
+            },
+            {
+                "event_type": "Manoeuvre",
+                "trigger": {
+                    "text": "演习",
+                    "offset": [
+                        118,
+                        120
+                    ]
+                },
+                "arguments": [
+                    {
+                        "role": "Subject",
+                        "text": "英国皇家海军",
+                        "offset": [
+                            18,
+                            24
+                        ]
+                    },
+                    {
+                        "role": "Content",
+                        "text": "潜艇的模拟导弹攻击、与协同舰艇在黑烟笼罩的环境处理火情及破舱进水等",
+                        "offset": [
+                            121,
+                            154
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "7",
+        "event_list": [
+            {
+                "event_type": "Deploy",
+                "trigger": {
+                    "text": "驻扎",
+                    "offset": [
+                        25,
+                        27
+                    ]
+                },
+                "arguments": [
+                    {},
+                    {
+                        "role": "Militaryforce",
+                        "text": "近海战斗舰",
+                        "offset": [
+                            10,
+                            15
+                        ]
+                    },
+                    {
+                        "role": "Location",
+                        "text": "母港加州圣迭戈",
+                        "offset": [
+                            18,
+                            25
+                        ]
+                    }
+                ]
+            },
+            {
+                "event_type": "Experiment",
+                "trigger": {
+                    "text": "海试",
+                    "offset": [
+                        186,
+                        188
+                    ]
+                },
+                "arguments": [
+                    {
+                        "role": "Equipment",
+                        "text": "独立号",
+                        "offset": [
+                            173,
+                            176
+                        ]
+                    },
+                    {
+                        "role": "Subject",
+                        "text": "美国海军",
+                        "offset": [
+                            232,
+                            236
+                        ]
+                    }
+                ]
+            },
+            {
+                "event_type": "Experiment",
+                "trigger": {
+                    "text": "测试",
+                    "offset": [
+                        183,
+                        185
+                    ]
+                },
+                "arguments": [
+                    {
+                        "role": "Equipment",
+                        "text": "独立号",
+                        "offset": [
+                            257,
+                            260
+                        ]
+                    },
+                    {
+                        "role": "Subject",
+                        "text": "美国海军",
+                        "offset": [
+                            232,
+                            236
+                        ]
+                    }
+                ]
+            },
+            {
+                "event_type": "Experiment",
+                "trigger": {
+                    "text": "测试",
+                    "offset": [
+                        393,
+                        395
+                    ]
+                },
+                "arguments": [
+                    {
+                        "role": "Subject",
+                        "text": "美国海军",
+                        "offset": [
+                            232,
+                            236
+                        ]
+                    },
+                    {
+                        "role": "Equipment",
+                        "text": "新型近海战斗舰",
+                        "offset": [
+                            8,
+                            15
+                        ]
+                    },
+                    {
+                        "role": "Location",
+                        "text": "佛罗里达",
+                        "offset": [
+                            383,
+                            387
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "8",
+        "event_list": [
+            {
+                "event_type": "Deploy",
+                "trigger": {
+                    "text": "部署",
+                    "offset": [
+                        17,
+                        19
+                    ]
+                },
+                "arguments": [
+                    {
+                        "role": "Subject",
+                        "text": "以色列",
+                        "offset": [
+                            99,
+                            102
+                        ]
+                    },
+                    {
+                        "role": "Location",
+                        "text": "北部港口城市海法",
+                        "offset": [
+                            9,
+                            17
+                        ]
+                    },
+                    {
+                        "role": "Militaryforce",
+                        "text": "铁穹",
+                        "offset": [
+                            230,
+                            232
+                        ]
+                    }
+                ]
+            },
+            {
+                "event_type": "Deploy",
+                "trigger": {
+                    "text": "部署",
+                    "offset": [
+                        120,
+                        122
+                    ]
+                },
+                "arguments": [
+                    {
+                        "role": "Subject",
+                        "text": "以色列",
+                        "offset": [
+                            99,
+                            102
+                        ]
+                    },
+                    {
+                        "role": "Area",
+                        "text": "南部边界",
+                        "offset": [
+                            114,
+                            118
+                        ]
+                    },
+                    {
+                        "role": "Militaryforce",
+                        "text": "铁穹系统",
+                        "offset": [
+                            125,
+                            129
+                        ]
+                    }
+                ]
+            },
+            {
+                "event_type": "Deploy",
+                "trigger": {
+                    "text": "部署",
+                    "offset": [
+                        120,
+                        122
+                    ]
+                },
+                "arguments": [
+                    {
+                        "role": "Subject",
+                        "text": "以色列",
+                        "offset": [
+                            99,
+                            102
+                        ]
+                    }
+                ]
+            },
+            {
+                "event_type": "Deploy",
+                "trigger": {
+                    "text": "部署",
+                    "offset": [
+                        120,
+                        122
+                    ]
+                },
+                "arguments": [
+                    {
+                        "role": "Subject",
+                        "text": "以色列",
+                        "offset": [
+                            99,
+                            102
+                        ]
+                    },
+                    {
+                        "role": "Location",
+                        "text": "以色列北部",
+                        "offset": [
+                            108,
+                            113
+                        ]
+                    },
+                    {
+                        "role": "Militaryforce",
+                        "text": "铁穹系统",
+                        "offset": [
+                            125,
+                            129
+                        ]
+                    }
+                ]
+            },
+            {
+                "event_type": "Experiment",
+                "trigger": {
+                    "text": "评测",
+                    "offset": [
+                        236,
+                        238
+                    ]
+                },
+                "arguments": [
+                    {
+                        "role": "Equipment",
+                        "text": "铁穹系统",
+                        "offset": [
+                            91,
+                            95
+                        ]
+                    },
+                    {
+                        "role": "Subject",
+                        "text": "美陆军",
+                        "offset": [
+                            250,
+                            253
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "9",
+        "event_list": [
+            {
+                "event_type": "Deploy",
+                "trigger": {
+                    "text": "部署",
+                    "offset": [
+                        96,
+                        98
+                    ]
+                },
+                "arguments": [
+                    {
+                        "role": "Militaryforce",
+                        "text": "Ku波段多功能射频系统感知预警雷达样机",
+                        "offset": [
+                            31,
+                            50
+                        ]
+                    },
+                    {
+                        "role": "Subject",
+                        "text": "雷神公司",
+                        "offset": [
+                            56,
+                            60
+                        ]
+                    },
+                    {
+                        "role": "Location",
+                        "text": "战区的前线基地",
+                        "offset": [
+                            98,
+                            105
+                        ]
+                    }
+                ]
+            },
+            {
+                "event_type": "Experiment",
+                "trigger": {
+                    "text": "测试",
+                    "offset": [
+                        241,
+                        243
+                    ]
+                },
+                "arguments": [
+                    {
+                        "role": "Subject",
+                        "text": "雷神公司",
+                        "offset": [
+                            189,
+                            193
+                        ]
+                    },
+                    {
+                        "role": "Equipment",
+                        "text": "Ku波段MFRFS系统",
+                        "offset": [
+                            170,
+                            181
+                        ]
+                    }
+                ]
+            },
+            {
+                "event_type": "Deploy",
+                "trigger": {
+                    "text": "部署",
+                    "offset": [
+                        290,
+                        292
+                    ]
+                },
+                "arguments": [
+                    {
+                        "role": "Subject",
+                        "text": "雷神公司",
+                        "offset": [
+                            189,
+                            193
+                        ]
+                    },
+                    {
+                        "role": "Militaryforce",
+                        "text": "低仰角MFRFS C-RAM S&amp;W系统",
+                        "offset": [
+                            249,
+                            273
+                        ]
+                    }
+                ]
+            },
+            {
+                "event_type": "Deploy",
+                "trigger": {
+                    "text": "部署",
+                    "offset": [
+                        290,
+                        292
+                    ]
+                },
+                "arguments": [
+                    {
+                        "role": "Date",
+                        "text": "2012年上半年",
+                        "offset": [
+                            274,
+                            282
+                        ]
+                    },
+                    {
+                        "role": "Subject",
+                        "text": "雷神公司",
+                        "offset": [
+                            283,
+                            287
+                        ]
+                    },
+                    {
+                        "role": "Militaryforce",
+                        "text": "低仰角MFRFS系统",
+                        "offset": [
+                            314,
+                            324
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "10",
+        "event_list": [
+            {
+                "event_type": "Exhibit",
+                "trigger": {
+                    "text": "披露了",
+                    "offset": [
+                        22,
+                        25
+                    ]
+                },
+                "arguments": [
+                    {
+                        "role": "Date",
+                        "text": "2012年5月22日",
+                        "offset": [
+                            0,
+                            10
+                        ]
+                    },
+                    {
+                        "role": "Subject",
+                        "text": "以色列埃尔比特系统公司",
+                        "offset": [
+                            11,
+                            22
+                        ]
+                    },
+                    {
+                        "role": "Equipment",
+                        "text": "SPEAR 120毫米自主式软后坐迫击炮系统",
+                        "offset": [
+                            38,
+                            60
+                        ]
+                    }
+                ]
+            },
+            {
+                "event_type": "Deploy",
+                "trigger": {
+                    "text": "部署",
+                    "offset": [
+                        193,
+                        195
+                    ]
+                },
+                "arguments": [
+                    {
+                        "role": "Subject",
+                        "text": "以色列",
+                        "offset": [
+                            11,
+                            14
+                        ]
+                    },
+                    {
+                        "role": "Militaryforce",
+                        "text": "新型SPEAR 120毫米软后坐迫击炮系统",
+                        "offset": [
+                            115,
+                            136
+                        ]
+                    }
+                ]
+            },
+            {
+                "event_type": "Experiment",
+                "trigger": {
+                    "text": "测试",
+                    "offset": [
+                        105,
+                        107
+                    ]
+                },
+                "arguments": [
+                    {
+                        "role": "Subject",
+                        "text": "以色列埃尔比特系统公司",
+                        "offset": [
+                            11,
+                            22
+                        ]
+                    },
+                    {
+                        "role": "Equipment",
+                        "text": "SPEAR迫击炮系统",
+                        "offset": [
+                            242,
+                            252
+                        ]
+                    },
+                    {
+                        "role": "Equipment",
+                        "text": "轻型轮式车辆平台",
+                        "offset": [
+                            71,
+                            79
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "11",
+        "event_list": [
+            {
+                "event_type": "Support",
+                "trigger": {
+                    "text": "交付",
+                    "offset": [
+                        81,
+                        83
+                    ]
+                },
+                "arguments": [
+                    {
+                        "role": "Subject",
+                        "text": "柯林斯公司",
+                        "offset": [
+                            0,
+                            5
+                        ]
+                    },
+                    {
+                        "role": "Object",
+                        "text": "E-2D预警机",
+                        "offset": [
+                            6,
+                            13
+                        ]
+                    }
+                ]
+            },
+            {
+                "event_type": "Support",
+                "trigger": {
+                    "text": "交付",
+                    "offset": [
+                        81,
+                        83
+                    ]
+                },
+                "arguments": [
+                    {
+                        "role": "Subject",
+                        "text": "柯林斯公司",
+                        "offset": [
+                            62,
+                            68
+                        ]
+                    },
+                    {
+                        "role": "Materials",
+                        "text": "E-2D预警机",
+                        "offset": [
+                            84,
+                            91
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "12",
+        "text": "2009年12月21日，舍瓦利亚・保罗号防空护卫舰在离开DCNS船厂后不久被正式移交给法国海军。    法国武器装备总署先通知DCNS公司准备此艘地平线级护卫舰的交付工作，然后才移交给法国海军。如今的舍瓦利亚・保罗号护卫舰被置于法国海军特别行动部队的指挥结构之中。    舍瓦利亚・保罗号即将进行海试，以评估其军事能力，尤其是通过长期部署。成功完成试验后，舍瓦利亚・保罗号将开始为法国海军服役。 ",
+        "event_list": []
+    }     
+]
