@@ -1,4 +1,3 @@
-
 # 如果你的自定义JSON数据集中的文本和标签需要对齐，你可以按照以下步骤修改上述示例代码：
 # 1. 加载和预处理数据：加载JSON数据集时，同时记录每个样本中文本和标签的位置信息。
 # 2. 创建Dataset类：在Dataset类中，除了返回文本的标记ID和标签索引之外，还返回文本和标签的对齐信息。
@@ -8,18 +7,20 @@
 import json
 from torch.utils.data import Dataset, DataLoader
 from commonfn import align_labels
-label_to_index={
+
+label_to_index = {
     # convert label to index
-    'O':0,
-    'Experiment':1,
-    'Manoeuvre':2,
-    'Deploy':3,
-    'Support':4,
-    'Accident':5,
-    'Exhibit':6,
-    'Conflict':7,
-    'Injure':8,
+    "O": 0,
+    "Experiment": 1,
+    "Manoeuvre": 2,
+    "Deploy": 3,
+    "Support": 4,
+    "Accident": 5,
+    "Exhibit": 6,
+    "Conflict": 7,
+    "Injure": 8,
 }
+
 
 class EventDataset(Dataset):
     def __init__(self, data_path, tokenizer=None):
@@ -28,7 +29,7 @@ class EventDataset(Dataset):
 
     def load_data(self, data_path):
         # 从JSON文件中加载数据
-        with open(data_path, 'r') as f:
+        with open(data_path, "r") as f:
             data = json.load(f)
         return data
 
@@ -37,13 +38,13 @@ class EventDataset(Dataset):
 
     def __getitem__(self, idx):
         sample = self.data[idx]
-        text = sample['text']
-        labels=[]
-        for event in sample['event_list']:
-            event_type = event['event_type']
-            trigger_text=event['trigger']['text']
-            trigger_offset=event['trigger']['offset']
-            labels.append((event_type,trigger_text,trigger_offset))
+        text = sample["text"]
+        labels = []
+        for event in sample["event_list"]:
+            event_type = event["event_type"]
+            trigger_text = event["trigger"]["text"]
+            trigger_offset = event["trigger"]["offset"]
+            labels.append((event_type, trigger_text, trigger_offset))
         # 将文本转换为标记的ID
         tokens = self.tokenizer.tokenize(text)
         input_ids = self.tokenizer.convert_tokens_to_ids(tokens)
@@ -55,4 +56,3 @@ class EventDataset(Dataset):
         label_ids = [label_to_index[label] for label in aligned_labels]
 
         return input_ids, label_ids, text, aligned_labels
-    

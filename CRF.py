@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 
+
 class CRF(nn.Module):
     def __init__(self, num_tags):
         super(CRF, self).__init__()
@@ -21,18 +22,23 @@ class CRF(nn.Module):
 
         # 计算分数矩阵
         scores = feats.transpose(0, 1)  # (batch_size, seq_len, num_tags)
-        scores = scores.unsqueeze(2).repeat(1, 1, self.num_tags, 1)  # (batch_size, seq_len, num_tags, num_tags)
+        # (batch_size, seq_len, num_tags, num_tags)
+        scores = scores.unsqueeze(2).repeat(1, 1, self.num_tags, 1)
         scores = scores + self.transitions.unsqueeze(0).unsqueeze(0)
-        scores[:, 0, :, :] = scores[:, 0, :, :] + self.start_transitions.unsqueeze(0).unsqueeze(0)
-        scores[:, -1, :, :] = scores[:, -1, :, :] + self.end_transitions.unsqueeze(0).unsqueeze(0)
+        scores[:, 0, :, :] = scores[:, 0, :, :] + \
+            self.start_transitions.unsqueeze(0).unsqueeze(0)
+        scores[:, -1, :, :] = scores[:, -1, :, :] + \
+            self.end_transitions.unsqueeze(0).unsqueeze(0)
 
         # 定义标记序列
-        tags = torch.arange(self.num_tags).unsqueeze(0).unsqueeze(0).repeat(batch_size, seq_length, 1).to(feats.device)
+        tags = torch.arange(self.num_tags).unsqueeze(0).unsqueeze(
+            0).repeat(batch_size, seq_length, 1).to(feats.device)
 
         # 动态规划计算最优路径
         for i in range(1, seq_length):
             # [batch_size, num_tags, num_tags]
-            transition_scores = scores[:, i, :, :] + tags.unsqueeze(-1) + tags.unsqueeze(-2)
+            transition_scores = scores[:, i, :, :] + \
+                tags.unsqueeze(-1) + tags.unsqueeze(-2)
             # [batch_size, num_tags]
             max_scores, max_score_tags = torch.max(transition_scores, dim=-1)
             # [batch_size, num_tags]
@@ -48,7 +54,8 @@ class CRF(nn.Module):
         best_paths = [best_tags[:, -1]]
         for i in range(seq_length - 2, -1, -1):
             best_tags = tags[:, i, :]
-            best_tag_ids = best_tags.gather(-1, best_paths[-1].unsqueeze(-1)).squeeze()
+            best_tag_ids = best_tags.gather(-1,
+                                            best_paths[-1].unsqueeze(-1)).squeeze()
             best_paths.append(best_tag_ids)
         best_paths.reverse()
 

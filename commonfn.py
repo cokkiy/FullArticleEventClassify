@@ -1,5 +1,7 @@
 from typing import List
-def align_labels(text:str, labels:list[(str,str,(int,int))], tokens:list[str]):
+
+
+def align_labels(text: str, labels: list[(str, str, (int, int))], tokens: list[str]):
     """Aligning labels to the tokenized text.
 
     Args:
@@ -14,30 +16,31 @@ def align_labels(text:str, labels:list[(str,str,(int,int))], tokens:list[str]):
     # 对齐标签到分词后的文本
     aligned_labels = ['O'] * len(tokens)
     start = 0
-    label_idx=0
-    finshed_label_len=0
+    label_idx = 0
+    finshed_label_len = 0
 
     if not labels:
         return aligned_labels
 
-    type, label_text, offset=labels[label_idx]
+    type, label_text, offset = labels[label_idx]
     for i, token in enumerate(tokens):
-        if label_idx>=len(labels):
+        if label_idx >= len(labels):
             break
-        if text.find(token, start) != -1:                
-            if start >= offset[0] and start <= offset[1]: 
-                finshed_label_len+=len(token)                   
-                if start+len(token)<= offset[1]:
+        if text.find(token, start) != -1:
+            if start >= offset[0] and start <= offset[1]:
+                finshed_label_len += len(token)
+                if start+len(token) <= offset[1]:
                     aligned_labels[i] = type
-                if finshed_label_len>=len(label_text):
-                    label_idx+=1
-                    finshed_label_len=0
-                    if label_idx<len(labels):
-                        type, label_text,offset=labels[label_idx]
+                if finshed_label_len >= len(label_text):
+                    label_idx += 1
+                    finshed_label_len = 0
+                    if label_idx < len(labels):
+                        type, label_text, offset = labels[label_idx]
             start = text.find(token, start) + len(token)
     return aligned_labels
 
-def get_token_index(text:str,tokens:list[str],start_in_text:int):
+
+def get_token_index(text: str, tokens: list[str], start_in_text: int):
     """Get index in tokens.
 
     Args:
@@ -51,8 +54,8 @@ def get_token_index(text:str,tokens:list[str],start_in_text:int):
     """
     start = 0
     for i, token in enumerate(tokens):
-        if text.find(token, start) != -1:                
-            if start == start_in_text: 
-               return i
+        if text.find(token, start) != -1:
+            if start == start_in_text:
+                return i
             start = text.find(token, start) + len(token)
     return -1

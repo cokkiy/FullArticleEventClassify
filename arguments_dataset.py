@@ -8,24 +8,26 @@
 import json
 from torch.utils.data import Dataset, DataLoader
 from commonfn import align_labels, get_token_index
-label_to_index={
+label_to_index = {
     # convert label to index
-    'O':0,
-    'Subject':1,
-    'Equipment':2,
-    'Date':3,
-    'Location':4,
-    'Area':5,
-    'Content':6,
-    'Militaryforce':7,
-    'Object':8,
-    'Materials':9,
-    'Result':10,
-    'Quantity':11
+    'O': 0,
+    'Subject': 1,
+    'Equipment': 2,
+    'Date': 3,
+    'Location': 4,
+    'Area': 5,
+    'Content': 6,
+    'Militaryforce': 7,
+    'Object': 8,
+    'Materials': 9,
+    'Result': 10,
+    'Quantity': 11
 }
+
+
 class ArgumentsDataset(Dataset):
     def __init__(self, data_path, tokenizer=None):
-        self.data=[]
+        self.data = []
         self.tokenizer = tokenizer  # 根据实际情况选择合适的分词器
         data = self.load_data(data_path)
         self.__prepare__(data)
@@ -38,40 +40,43 @@ class ArgumentsDataset(Dataset):
 
     def __len__(self):
         return len(self.data)
-    
+
     def __prepare__(self, data):
         for idx in range(len(data)):
             sample = data[idx]
             text = sample['text']
-            labels=[]
+            labels = []
             for event in sample['event_list']:
                 event_type = event['event_type']
-                trigger_text=event['trigger']['text']      
-                trigger_offset=event['trigger']['offset']          
+                trigger_text = event['trigger']['text']
+                trigger_offset = event['trigger']['offset']
                 arguments = [
                     (argument['role'], argument['text'], argument['offset'])
                     for argument in event['arguments']
                 ]
-                labels.append((event_type,trigger_text,trigger_offset,arguments))
-                
+                labels.append((event_type, trigger_text,
+                              trigger_offset, arguments))
+
             # 将文本转换为标记的ID
             input_tokens = self.tokenizer.tokenize(text)
-            
-             # 对齐标签到分词后的文本    
+
+            # 对齐标签到分词后的文本
             for event_type, trigger_text, trigger_offset, arguments in labels:
                 # 对齐标签到分词后的文本
-                prompt_position=get_token_index(text,input_tokens,trigger_offset[0])
-                prompt_text=f'{trigger_text}，位置{prompt_position}'
-                prompt_tokens=self.tokenizer.tokenize(prompt_text)
+                prompt_position = get_token_index(
+                    text, input_tokens, trigger_offset[0])
+                prompt_text = f'{trigger_text}，位置{prompt_position}'
+                prompt_tokens = self.tokenizer.tokenize(prompt_text)
                 # 将Prompt和输入文本的分词结果合并
-                tokens = [self.tokenizer.cls_token] + prompt_tokens + [self.tokenizer.sep_token] + input_tokens
+                tokens = [self.tokenizer.cls_token] + prompt_tokens + \
+                    [self.tokenizer.sep_token] + input_tokens
                 input_ids = self.tokenizer.convert_tokens_to_ids(tokens)
                 aligned_labels = align_labels(text, arguments, input_tokens)
-                aligned_labels= ['O'] *( len(tokens)-len(input_tokens))+aligned_labels
+                aligned_labels = ['O'] * \
+                    (len(tokens)-len(input_tokens))+aligned_labels
                 label_ids = [label_to_index[label] for label in aligned_labels]
-                self.data.append((input_ids,label_ids,text))
+                self.data.append((input_ids, label_ids, text))
 
     def __getitem__(self, idx):
-        input_ids, label_ids,text = self.data[idx]
+        input_ids, label_ids, text = self.data[idx]
         return input_ids, label_ids, text
-    
