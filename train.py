@@ -1,91 +1,133 @@
+import time
 import torch
 import torch.nn as nn
-from transformers import AutoTokenizer, AutoModelForMaskedLM
+from transformers import AutoTokenizer, AutoModelForMaskedLM, AutoConfig
+from torch.utils.data import DataLoader
+from BertBiLSTMCRF import BertBiLSTMCRF
+from EventExtratorClassifer import EventExtractorClassifer
+from event_dataset import EventDataset
+from arguments_dataset import ArgumentsDataset
 
-# 加载预训练的GPT模型和分词器
-# tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
-# model = GPT2Model.from_pretrained("gpt2")
-tokenizer = AutoTokenizer.from_pretrained('xlm-roberta-base')
-model = AutoModelForMaskedLM.from_pretrained("xlm-roberta-base")
-
-# 定义事件抽取和分类模型
-class EventExtractor(nn.Module):
-    def __init__(self, gpt_model, num_event_types, num_arguments):
-        super(EventExtractor, self).__init__()
-        self.gpt_model = gpt_model
-        self.event_type_classifier = nn.Linear(gpt_model.config.hidden_size, num_event_types)
-        self.argument_classifier = nn.Linear(gpt_model.config.hidden_size, num_arguments)
-    
-    def forward(self, input_ids):
-        outputs = self.gpt_model(input_ids)
-        pooled_output = outputs[1]
-        event_type_logits = self.event_type_classifier(pooled_output)
-        argument_logits = self.argument_classifier(pooled_output)
-        return event_type_logits, argument_logits
 
 # 设置超参数
-import itertools
-num_event_types = 5  # 事件类型数量
-num_arguments = 10  # 论元分类数量
+num_event_types = 9  # 事件类型数量
+num_arguments = 12  # 论元分类数量
 learning_rate = 1e-5
 num_epochs = 10
-batch_size = 16
+batch_size = 1  # 16
 
-# 准备训练数据（假设已经有了）
-train_data = ...
+# device specific
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+# 加载预训练的Bert模型和分词器
+tokenizer = AutoTokenizer.from_pretrained('../models/xlm-roberta-base')
+config = AutoConfig.from_pretrained(
+    "../models/xlm-roberta-base", output_hidden_states=True)
+model = AutoModelForMaskedLM.from_pretrained(
+    "../models/xlm-roberta-base", config=config).to(device)
 
-# 创建模型实例
-extractor = EventExtractor(model, num_event_types, num_arguments)
+# 训练数据
+train_args_dataset = ArgumentsDataset(
+    './data//FNDEE_train1.json', tokenizer)  # 论元数据集
+train_event_dataset = EventDataset(
+    './data//FNDEE_train1.json', tokenizer)  # 事件数据集
+# Dataloader
+train_event_dataloader = DataLoader(
+    train_event_dataset, batch_size=batch_size, shuffle=False)
+train_args_dataloader = DataLoader(
+    train_args_dataset, batch_size=batch_size, shuffle=False)
 
-# 定义优化器和损失函数
-optimizer = torch.optim.Adam(extractor.parameters(), lr=learning_rate)
+# event extract and classifier model
+event_model = EventExtractorClassifer(
+    bert_model=model, num_labels=num_event_types).to(device)
+# arguments extract and classify model
+args_model = BertBiLSTMCRF(
+    model, num_classes=num_arguments, freeze_bert=True).to(device)
+
+# Optimizer
+event_optimizer = torch.optim.AdamW(
+    event_model.parameters(), lr=learning_rate, eps=1e-8)
+
+# Training loop for event extraction and classification training
 event_type_criterion = nn.CrossEntropyLoss()
-argument_criterion = nn.CrossEntropyLoss()
+for epoch in range(num_epochs):
+    event_model.train()
+    total_loss = 0
+    for batch in train_event_dataloader:
+        event_optimizer.zero_grad()
+        input_ids, label_ids, attention_mask,  _, _ = batch
+        input_ids = input_ids.to(device)
+        label_ids = label_ids.to(device, dtype=torch.long)
+        attention_mask = attention_mask.to(device)
+        event_type_logits = event_model(input_ids, attention_mask)
+        loss = event_type_criterion(
+            event_type_logits.view(-1, num_event_types), label_ids.view(-1))
+        loss.backward()
+        event_optimizer.step()
+        total_loss += loss.item()
+    avg_train_loss = total_loss / len(train_event_dataloader)
+    print(f'Epoch: {epoch+1}, Training Loss: {avg_train_loss}')
 
-# 微调模型
-for _, i in itertools.product(range(num_epochs), range(0, len(train_data), batch_size)):
-    batch_data = train_data[i:i+batch_size]
-    input_ids = []
-    event_type_labels = []
-    argument_labels = []
-    for data in batch_data:
-        text = data['text']
-        event_type = data['event_type']
-        argument = data['argument']
 
-        encoded = tokenizer.encode(text, add_special_tokens=True)
-        input_ids.append(encoded)
-        event_type_labels.append(event_type)
-        argument_labels.append(argument)
+# Optimizer
+args_optimizer = torch.optim.AdamW(
+    args_model.parameters(), lr=learning_rate, eps=1e-8)
 
-    input_ids = torch.tensor(input_ids)
-    event_type_labels = torch.tensor(event_type_labels)
-    argument_labels = torch.tensor(argument_labels)
+# Training loop for args extraction and classification training
+for epoch in range(num_epochs):
+    args_model.train()
+    total_loss = 0
+    for batch in train_args_dataloader:
+        input_ids, label_ids, attention_mask,  _ = batch
+        input_ids = input_ids.to(device)
+        label_ids = label_ids.to(device)
+        attention_mask = attention_mask.to(device)
+        loss = args_model(
+            input_ids, attention_mask=attention_mask, labels=label_ids)
+        loss.backward()
+        args_optimizer.step()
+        args_optimizer.zero_grad()
+        total_loss += loss.item()
+    avg_train_loss = total_loss / len(train_args_dataloader)
+    print(f'Epoch: {epoch+1}, Training Loss: {avg_train_loss}')
 
-    optimizer.zero_grad()
-    event_type_logits, argument_logits = extractor(input_ids)
+# get current timestamp and convert to string
+timestamp = str(int(time.time()))
+# create file name using timestamp
+event_filename = f"../result/models/event_model_{timestamp}"
+args_filename = f"../result/models/args_model_{timestamp}"
+torch.save(event_model.state_dict, event_filename)
+torch.save(args_model.state_dict, args_filename)
+print(f"model file {event_filename} and {args_filename} saved")
 
-    event_type_loss = event_type_criterion(event_type_logits, event_type_labels)
-    argument_loss = argument_criterion(argument_logits, argument_labels)
+# Evaluation loop
+# model.eval()
+# with torch.no_grad():
+#     eval_loss = 0
+#     for batch in valid_dataloader:
+#         b_input_ids, b_input_mask, b_labels = tuple(
+#             t.to(device) for t in batch)
+#         loss = model(b_input_ids, token_type_ids=None,
+#                      attention_mask=b_input_mask, labels=b_labels)
+#         eval_loss += loss.item()
+#     avg_eval_loss = eval_loss / len(valid_dataloader)
+#     print(f'Validation Loss: {avg_eval_loss}')
 
-    loss = event_type_loss + argument_loss
-    loss.backward()
-    optimizer.step()
 
-# 使用训练好的模型进行预测（假设有测试数据）
-test_data = ...
-predictions = []
+# # 使用训练好的模型进行预测（假设有测试数据）
+# test_data = ...
+# predictions = []
 
-for data in test_data:
-    text = data['text']
-    encoded = tokenizer.encode(text, add_special_tokens=True)
-    input_ids = torch.tensor(encoded).unsqueeze(0)
+# for data in test_data:
+#     text = data['text']
+#     encoded = tokenizer.encode(text, add_special_tokens=True)
+#     input_ids = torch.tensor(encoded).unsqueeze(0)
 
-    event_type_logits, argument_logits = extractor(input_ids)
+#     event_type_logits, argument_logits = extractor(input_ids)
 
-    predicted_event_type = torch.argmax(event_type_logits, dim=1).item()
-    predicted_argument = torch.argmax(argument_logits, dim=1).item()
+#     predicted_event_type = torch.argmax(event_type_logits, dim=1).item()
+#     predicted_argument = torch.argmax(argument_logits, dim=1).item()
 
-    predictions.append({'event_type': predicted_event_type, 'argument': predicted_argument})
+#     predictions.append({'event_type': predicted_event_type,
+#                        'argument': predicted_argument})
 
-print(predictions)
+# print(predictions)
