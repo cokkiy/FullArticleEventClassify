@@ -5,8 +5,9 @@
 # 下面是一个简单的示例代码，展示了如何为具有文本和标签对齐需求的自定义JSON数据集创建一个适用于Transformer模型的DataLoader：
 
 import json
+import torch
 from torch.utils.data import Dataset, DataLoader
-from commonfn import align_labels
+from commonfn import align_labels, create_attention_mask
 
 label_to_index = {
     # convert label to index
@@ -54,5 +55,9 @@ class EventDataset(Dataset):
 
         # 将标签转换为索引
         label_ids = [label_to_index[label] for label in aligned_labels]
-
-        return input_ids, label_ids, text, aligned_labels
+        # get attention mask
+        attention_mask = create_attention_mask(self.tokenizer, tokens)
+        input_ids = torch.tensor([input_ids]).squeeze()
+        label_ids = torch.tensor([label_ids]).squeeze()
+        attention_mask = torch.tensor([attention_mask]).squeeze()
+        return input_ids, label_ids, attention_mask,  text, aligned_labels

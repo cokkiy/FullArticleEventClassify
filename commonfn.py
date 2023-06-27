@@ -59,3 +59,11 @@ def get_token_index(text: str, tokens: list[str], start_in_text: int):
                 return i
             start = text.find(token, start) + len(token)
     return -1
+
+
+def create_attention_mask(tokenizer, tokens: list):
+    attention_mask = [1 for _ in range(len(tokens))]
+    for i, token in enumerate(tokens):
+        if token in tokenizer.all_special_tokens:
+            attention_mask[i] = 0
+    return attention_mask
