@@ -1,10 +1,10 @@
 import torch
 import torch.nn as nn
-from CRF import CRF
+from torchcrf import CRF
 
 
 class BertBiLSTMCRF(nn.Module):
-    def __init__(self, bert_model, num_classes, freeze_bert=True):
+    def __init__(self, bert_model, num_classes, freeze_bert=False):
         super(BertBiLSTMCRF, self).__init__()
         self.num_classes = num_classes
         self.bert = bert_model
@@ -23,12 +23,11 @@ class BertBiLSTMCRF(nn.Module):
     def forward(self, input_ids, token_type_ids=None, attention_mask=None, labels=None):
         outputs = self.bert(
             input_ids, token_type_ids=token_type_ids, attention_mask=attention_mask)
-        sequence_output = outputs[0]
+        sequence_output = outputs[1][-1]
         sequence_output, _ = self.lstm(sequence_output)
         sequence_output = self.dropout(sequence_output)
         logits = self.linear(sequence_output)
         if labels is None:
             return self.crf.decode(logits, mask=attention_mask.byte())
-        log_likelihood = self.crf(
-            logits, labels, mask=attention_mask.byte())
+        log_likelihood = self.crf(logits, labels)
         return (-1) * log_likelihood
