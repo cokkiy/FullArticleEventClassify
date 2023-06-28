@@ -95,8 +95,8 @@ timestamp = str(int(time.time()))
 # create file name using timestamp
 event_filename = f"../result/models/event_model_{timestamp}"
 args_filename = f"../result/models/args_model_{timestamp}"
-torch.save(event_model.state_dict, event_filename)
-torch.save(args_model.state_dict, args_filename)
+torch.save(event_model.state_dict(), event_filename)
+torch.save(args_model.state_dict(), args_filename)
 print(f"model file {event_filename} and {args_filename} saved")
 
 # Evaluation loop
