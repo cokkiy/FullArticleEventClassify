@@ -47,7 +47,7 @@ python -u train.py  --path ../result/models --model_name test -- batch_size 8 --
 运行下面命令用测试集评价训练后的模型:
 
 ```shell
-python -u eval.py ../result/modelsmymodal
+python -u eval.py ../result/models/mymodal
 ```
 
 > 使用训练集评价训练的模型`../result/models/mymodal`
