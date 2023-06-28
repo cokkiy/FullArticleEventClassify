@@ -87,3 +87,21 @@ class ArgumentsDataset(Dataset):
         label_ids = torch.tensor(label_ids).squeeze()
         attention_mask = torch.tensor(attention_mask).squeeze()
         return input_ids, label_ids, attention_mask, text
+
+    def pad_collate_fn(self, batch):
+        """Collate function for DataLoader.
+
+        Args:
+            batch (list): List of batch data.
+
+        Returns:
+            _type_: tuple
+            _describe_: Batch data.
+        """
+        from torch.nn.utils.rnn import pad_sequence
+        input_ids, label_ids, attention_mask, text = zip(
+            *batch)
+        input_ids = pad_sequence(input_ids, batch_first=True)
+        label_ids = pad_sequence(label_ids, batch_first=True)
+        attention_mask = pad_sequence(attention_mask, batch_first=True)
+        return input_ids, label_ids, attention_mask,  text
