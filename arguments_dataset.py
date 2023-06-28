@@ -35,7 +35,7 @@ class ArgumentsDataset(Dataset):
 
     def load_data(self, data_path):
         # 从JSON文件中加载数据
-        with open(data_path, 'r') as f:
+        with open(data_path, 'r', encoding='utf8') as f:
             data = json.load(f)
         return data
 
