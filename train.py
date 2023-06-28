@@ -13,8 +13,8 @@ from arguments_dataset import ArgumentsDataset
 num_event_types = 9  # 事件类型数量
 num_arguments = 12  # 论元分类数量
 learning_rate = 1e-5
-num_epochs = 10
-batch_size = 1  # 16
+num_epochs = 30
+batch_size = 4  # 16
 
 # device specific
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -32,9 +32,9 @@ train_event_dataset = EventDataset(
     './data//FNDEE_train1.json', tokenizer)  # 事件数据集
 # Dataloader
 train_event_dataloader = DataLoader(
-    train_event_dataset, batch_size=batch_size, shuffle=False)
+    train_event_dataset, batch_size=batch_size, collate_fn=train_event_dataset.pad_collate_fn, shuffle=False)
 train_args_dataloader = DataLoader(
-    train_args_dataset, batch_size=batch_size, shuffle=False)
+    train_args_dataset, batch_size=batch_size, collate_fn=train_args_dataset.pad_collate_fn, shuffle=False)
 
 # event extract and classifier model
 event_model = EventExtractorClassifer(
