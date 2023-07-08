@@ -8,7 +8,7 @@ import torch.nn as nn
 from transformers import DataCollatorForTokenClassification
 import time
 from torch.utils.data import DataLoader
-from EventExtratorClassifer import EventExtractorClassifer
+from ArgumentsExtratorClassifer import ArgumentsExtratorClassifer
 from arguments_dataset2 import ArgumentsDataset
 import argparse
 import os
@@ -17,6 +17,7 @@ from transformers import (
     DataCollatorForTokenClassification,
     AutoModelForTokenClassification,
     AutoConfig,
+    AutoModelForMaskedLM,
 )
 
 # get current timestamp and convert to string
@@ -49,11 +50,19 @@ parser.add_argument(
     "--batch_size", type=int, help="Train Batch size, default 4", default=4
 )
 parser.add_argument(
-    "--bert_model",
+    "--bert_ner_model",
     type=str,
     default="../models/xlm-roberta-base-ner-hrl",
     help='Pretrained bert model name (default: "../models/xlm-roberta-base-ner-hrl")',
 )
+
+parser.add_argument(
+    "--bert_model",
+    type=str,
+    default="../models/xlm-roberta-base",
+    help='Pretrained bert model name (default: "../models/xlm-roberta-base")',
+)
+
 parser.add_argument(
     "--num_epochs", type=int, default=20, help="Number of epochs to train (default: 20)"
 )
@@ -67,7 +76,7 @@ valid_file = args.valid_file
 batch_size = args.batch_size
 bert_name = args.bert_model
 num_epochs = args.num_epochs
-
+bert_ner_name = args.bert_ner_model
 # create folder to save model
 if not os.path.exists(path):
     os.makedirs(path)
@@ -117,11 +126,15 @@ eval_dataloader = DataLoader(
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 print("Loading pretrained model...")
-config = AutoConfig.from_pretrained(bert_name, output_hidden_states=True)
-bert_model = AutoModelForTokenClassification.from_pretrained(bert_name, config=config)
-model = EventExtractorClassifer(bert_model, num_labels=args_dataset.num_args_types).to(
-    device
+config = AutoConfig.from_pretrained(bert_ner_name, output_hidden_states=True)
+bert_ner_model = AutoModelForTokenClassification.from_pretrained(
+    bert_ner_name, config=config
 )
+bert_config = AutoConfig.from_pretrained(bert_name, output_hidden_states=True)
+bert_model = AutoModelForMaskedLM.from_pretrained(bert_name, config=bert_config)
+model = ArgumentsExtratorClassifer(
+    bert_ner_model, bert_model, num_labels=args_dataset.num_args_types
+).to(device)
 
 optimizer = AdamW(model.parameters(), lr=2e-5)
 
