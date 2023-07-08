@@ -5,6 +5,7 @@ from transformers import AutoTokenizer, AutoModelForMaskedLM, AutoConfig
 from torch.utils.data import DataLoader
 from BertBiLSTMCRF import BertBiLSTMCRF
 from EventExtratorClassifer import EventExtractorClassifer
+from PRF1Calculator import PRF1Calculator
 from event_dataset import EventDataset
 from arguments_dataset import ArgumentsDataset
 
@@ -80,7 +81,9 @@ event_optimizer = torch.optim.AdamW(
 
 # Training loop for event extraction and classification training
 print("Training event extraction and classification model...")
+weight = torch.tensor([1.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0])
 event_type_criterion = nn.CrossEntropyLoss()
+prf1 = PRF1Calculator()
 for epoch in range(num_epochs):
     event_model.train()
     total_loss = 0
@@ -96,8 +99,12 @@ for epoch in range(num_epochs):
         loss.backward()
         event_optimizer.step()
         total_loss += loss.item()
+        event_preds = torch.argmax(event_type_logits[1], dim=1)
+        prf1.update(event_preds, label_ids.view(-1))
     avg_train_loss = total_loss / len(train_event_dataloader)
     print(f'Epoch: {epoch+1}, Training Loss: {avg_train_loss}')
+    print(
+        f'     Trigger Precision: {prf1.P}, Recall: {round(prf1.R, 4)}, F1: {round(prf1.F1, 4)}')
 
 
 print("Training arguments extraction and classification model...")
@@ -106,26 +113,26 @@ args_optimizer = torch.optim.AdamW(
     args_model.parameters(), lr=learning_rate, eps=1e-8)
 
 # Training loop for args extraction and classification training
-for epoch in range(num_epochs):
-    args_model.train()
-    total_loss = 0
-    for batch in train_args_dataloader:
-        input_ids, label_ids, attention_mask,  _ = batch
-        input_ids = input_ids.to(device)
-        label_ids = label_ids.to(device)
-        attention_mask = attention_mask.to(device)
-        loss = args_model(
-            input_ids, attention_mask=attention_mask, labels=label_ids)
-        loss.backward()
-        args_optimizer.step()
-        args_optimizer.zero_grad()
-        total_loss += loss.item()
-    avg_train_loss = total_loss / len(train_args_dataloader)
-    print(f'Epoch: {epoch+1}, Training Loss: {avg_train_loss}')
+# for epoch in range(num_epochs):
+#     args_model.train()
+#     total_loss = 0
+#     for batch in train_args_dataloader:
+#         input_ids, label_ids, attention_mask,  _ = batch
+#         input_ids = input_ids.to(device)
+#         label_ids = label_ids.to(device)
+#         attention_mask = attention_mask.to(device)
+#         loss = args_model(
+#             input_ids, attention_mask=attention_mask, labels=label_ids)
+#         loss.backward()
+#         args_optimizer.step()
+#         args_optimizer.zero_grad()
+#         total_loss += loss.item()
+#     avg_train_loss = total_loss / len(train_args_dataloader)
+#     print(f'Epoch: {epoch+1}, Training Loss: {avg_train_loss}')
 
 print("Saving model...")
 event_filename = f"{path}/{model_name}-event.pt"
 args_filename = f"{path}/{model_name}-args.pt"
 torch.save(event_model.state_dict(), event_filename)
-torch.save(args_model.state_dict(), args_filename)
+# torch.save(args_model.state_dict(), args_filename)
 print(f"model file {event_filename} and {args_filename} saved")

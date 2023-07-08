@@ -4,11 +4,11 @@
 
 ## 必需条件
 
-首先安装`transformer`和`torchcrf`。
+首先安装`transformers`和`pytorch-crf`。
 
 ```shell
-pip install transformer
-pip install torchcrf
+pip install transformers
+pip install pytorch-crf
 ```
 
 ## 训练

@@ -15,8 +15,12 @@ class EventExtractorClassifer(nn.Module):
                 param.requires_grad = False
 
     def forward(self, input_ids, attention_mask=None):
-        outputs = self.bert(
-            input_ids, attention_mask=attention_mask, return_dict=False)
-        pooled_output = outputs[1][-1]
+        output = self.bert(input_ids, attention_mask)
+        pooled_output = output[1][-1]
         pooled_output = self.dropout(pooled_output)
         return self.classifier(pooled_output)
+
+    def save_pretrained(self, path, save_function=None):
+        if save_function is None:
+            save_function = torch.save
+        save_function(self.state_dict(), path)

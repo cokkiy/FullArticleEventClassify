@@ -28,6 +28,12 @@ class EventDataset(Dataset):
         self.data = self.load_data(data_path)
         self.tokenizer = tokenizer  # 根据实际情况选择合适的分词器
 
+    @property
+    def num_event_types(self) -> int:
+        """get number of event types
+        """
+        return len(label_to_index)
+
     def load_data(self, data_path):
         # 从JSON文件中加载数据
         with open(data_path, "r", encoding='utf8') as f:

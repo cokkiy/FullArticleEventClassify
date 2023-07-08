@@ -3,14 +3,66 @@
     // 悬停以查看现有属性的描述。
     // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
-    "configurations": [
+    "configurations": [                
         {
             "name": "Python: training",
             "type": "python",
             "request": "launch",
             "program": "train.py",
             "console": "integratedTerminal",
-            "justMyCode": true
+            "justMyCode": true,
+            "args": [
+                "--num_epochs", "10"
+            ]
+        },
+        {
+            "name": "Python: eval",
+            "type": "python",
+            "request": "launch",
+            "program": "eval.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "../result/models/1688006943",  // model file name
+                "--batch_size", "1",
+                "--valid_file", "./data/FNDEE_valid1.json"]
+        },
+        {
+            "name": "Python: training event",
+            "type": "python",
+            "request": "launch",
+            "program": "train_event.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--train_file","./data/dstest.json",
+                "--batch_size","4",
+                "--num_epochs","5"
+            ]
+        },
+        {
+            "name": "Python: training args",
+            "type": "python",
+            "request": "launch",
+            "program": "train_args.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--train_file",
+                "./data/dstest.json",
+                "--batch_size",
+                "4",
+                "--num_epochs",
+                "5"
+            ]
+        },
+        {
+            "name": "Python: predict",
+            "type": "python",
+            "request": "launch",
+            "program": "predict.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
         }
     ]
 }

@@ -21,7 +21,7 @@ def align_labels(text: str, labels: list[(str, str, (int, int))], tokens: list[s
 
     if not labels:
         return aligned_labels
-
+    current_tag = None
     type, label_text, offset = labels[label_idx]
     for i, token in enumerate(tokens):
         if label_idx >= len(labels):
@@ -30,10 +30,13 @@ def align_labels(text: str, labels: list[(str, str, (int, int))], tokens: list[s
             if start >= offset[0] and start <= offset[1]:
                 finshed_label_len += len(token)
                 if start+len(token) <= offset[1]:
-                    aligned_labels[i] = type
+                    tag = f'B-{type}' if current_tag is None else f'I-{type}'
+                    aligned_labels[i] = tag
+                    current_tag = type
                 if finshed_label_len >= len(label_text):
                     label_idx += 1
                     finshed_label_len = 0
+                    current_tag = None
                     if label_idx < len(labels):
                         type, label_text, offset = labels[label_idx]
             start = text.find(token, start) + len(token)
