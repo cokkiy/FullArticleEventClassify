@@ -14,7 +14,7 @@ def align_labels(text: str, labels: list[(str, str, (int, int))], tokens: list[s
         _describe_: Aligned labels to tokenized text.
     """
     # 对齐标签到分词后的文本
-    aligned_labels = ['O'] * len(tokens)
+    aligned_labels = ["O"] * len(tokens)
     start = 0
     label_idx = 0
     finshed_label_len = 0
@@ -29,8 +29,8 @@ def align_labels(text: str, labels: list[(str, str, (int, int))], tokens: list[s
         if text.find(token, start) != -1:
             if start >= offset[0] and start <= offset[1]:
                 finshed_label_len += len(token)
-                if start+len(token) <= offset[1]:
-                    tag = f'B-{type}' if current_tag is None else f'I-{type}'
+                if start + len(token) <= offset[1]:
+                    tag = f"B-{type}" if current_tag is None else f"I-{type}"
                     aligned_labels[i] = tag
                     current_tag = type
                 if finshed_label_len >= len(label_text):
@@ -70,3 +70,24 @@ def create_attention_mask(tokenizer, tokens: list):
         if token in tokenizer.all_special_tokens:
             attention_mask[i] = 0
     return attention_mask
+
+
+def convert_tokenoffset_to_charoffset(offset_mapping: list[(int, int)]):
+    """Converts token offsets to character offsets.
+
+    Args:
+        offset_mapping (list[(int, int)]): List of token offsets.
+
+    Returns:
+        _type_: List[List[int]]
+        _describe_: List of character offsets.
+    """
+    char_offset = []
+    for i in offset_mapping:
+        if i[0] == i[1]:
+            char_offset.append([])
+        elif i[0] + 1 == i[1]:
+            char_offset.append([i[0]])
+        else:
+            char_offset.append([i[0], i[-1] - 1])
+    return char_offset
