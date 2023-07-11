@@ -26,7 +26,7 @@ parser = argparse.ArgumentParser(description="Train model on the FNDEE dataset")
 parser.add_argument(
     "--path",
     type=str,
-    default="../result/models",
+    default="../result/models-event",
     help="The file path will save the trained model (default: ../result/models)",
 )
 # parser.add_argument('--model_name', type=str, default=f'{timestamp}',
@@ -58,22 +58,111 @@ parser.add_argument(
     "--num_epochs", type=int, default=20, help="Number of epochs to train (default: 20)"
 )
 
+parser.add_argument(
+    "--short_circle",
+    type=bool,
+    default=True,
+    help="Short circle the bert model last two hidden states (default: True)",
+)
+
+parser.add_argument(
+    "--mask",
+    type=bool,
+    default=True,
+    help="Mask the dataset no event and arguments words (default: True)",
+)
+
+parser.add_argument(
+    "--replace",
+    type=bool,
+    default=True,
+    help="Replace the argument's text with the same type event and same argument role text  (default: True)",
+)
+
+parser.add_argument(
+    "--mask_ratio",
+    type=float,
+    default=0.3,
+    help="Mask ratio (default: 0.3)",
+)
+
+parser.add_argument(
+    "--replace_ratio",
+    type=float,
+    default=0.3,
+    help="Replace ratio  (default: 0.3)",
+)
+
+parser.add_argument(
+    "--max_mask_num",
+    type=int,
+    default=10,
+    help="Max mask token number (default: 10)",
+)
+
+parser.add_argument(
+    "--max_replace_num",
+    type=int,
+    default=3,
+    help="Max Replaced arguments number  (default: 3)",
+)
+
+parser.add_argument(
+    "--refine",
+    type=bool,
+    default=False,
+    help="Refine the model or train the model (default: False)",
+)
+
+parser.add_argument(
+    "--base_model",
+    type=str,
+    default=None,
+    help="If Refine the model, the base model name to refine (default: None)",
+)
+
 args = parser.parse_args()
 
-path = f"{ args.path}/{timestamp}"
-# model_name = args.model_name
 train_file = args.train_file
 valid_file = args.valid_file
 batch_size = args.batch_size
 bert_name = args.bert_model
 num_epochs = args.num_epochs
+short_circle = args.short_circle
+mask = args.mask
+replace = args.replace
+mask_ratio = args.mask_ratio
+replace_ratio = args.replace_ratio
+max_replace_num = args.max_replace_num
+max_mask_num = args.max_mask_num
+refine = args.refine
+base_model = args.base_model
+
+if refine and base_model is None:
+    print("Please input the base model name to refine.")
+    exit(-1)
+if refine:
+    path = f"{ args.path}_{short_circle}_m.{mask}.{mask_ratio}_r.{replace}.{max_replace_num}_refine_{base_model}_{timestamp}"
+else:
+    path = f"{ args.path}_{short_circle}_m.{mask}.{mask_ratio}_r.{replace}.{max_replace_num}_{timestamp}"
+
 
 # create folder to save model
 if not os.path.exists(path):
     os.makedirs(path)
 
 tokenizer = AutoTokenizer.from_pretrained(bert_name)
-event_dataset = EventDataset(train_file, valid_file, tokenizer)
+event_dataset = EventDataset(
+    train_file,
+    valid_file,
+    tokenizer,
+    mask=mask,
+    replace=replace,
+    mask_ratio=mask_ratio,
+    replace_ratio=replace_ratio,
+    max_replace_num=max_replace_num,
+    max_mask_num=max_mask_num,
+)
 data_collator = DataCollatorForTokenClassification(tokenizer=tokenizer)
 
 train_dataloader = DataLoader(
@@ -94,6 +183,10 @@ bert_model = AutoModelForTokenClassification.from_pretrained(bert_name, config=c
 model = EventExtractorClassifer(
     bert_model, num_labels=event_dataset.num_event_types
 ).to(device)
+
+if refine:
+    model_data = torch.load(base_model)
+    model.load_state_dict(model_data, map_location=device)
 
 optimizer = AdamW(model.parameters(), lr=2e-5)
 
@@ -183,7 +276,7 @@ for epoch in range(num_train_epochs):
     )
 
     # Save and upload
-    event_filename = f"{path}/model_{epoch}.pt"
+    event_filename = f"{path}/model_{epoch}_p{results['overall_precision']:.4f}_r{results['overall_recall']:.4f}_f{results['overall_f1']:.4f}.pt"
     accelerator.wait_for_everyone()
     unwrapped_model = accelerator.unwrap_model(model)
     unwrapped_model.save_pretrained(event_filename, save_function=accelerator.save)

@@ -67,9 +67,22 @@ parser.add_argument(
     "--num_epochs", type=int, default=20, help="Number of epochs to train (default: 20)"
 )
 
+parser.add_argument(
+    "--refine",
+    type=bool,
+    default=False,
+    help="Refine the model or train the model (default: False)",
+)
+
+parser.add_argument(
+    "--base_model",
+    type=str,
+    default=None,
+    help="If Refine the model, the base model name to refine (default: None)",
+)
+
 args = parser.parse_args()
 
-path = f"{ args.path}/{timestamp}"
 # model_name = args.model_name
 train_file = args.train_file
 valid_file = args.valid_file
@@ -77,6 +90,18 @@ batch_size = args.batch_size
 bert_name = args.bert_model
 num_epochs = args.num_epochs
 bert_ner_name = args.bert_ner_model
+
+refine = args.refine
+base_model = args.base_model
+if refine and base_model is None:
+    print("Please input the base model name to refine.")
+    exit(-1)
+
+if refine:
+    path = f"{ args.path}-refine/{timestamp}"
+else:
+    path = f"{ args.path}/{timestamp}"
+
 # create folder to save model
 if not os.path.exists(path):
     os.makedirs(path)
@@ -135,6 +160,10 @@ bert_model = AutoModelForMaskedLM.from_pretrained(bert_name, config=bert_config)
 model = ArgumentsExtratorClassifer(
     bert_ner_model, bert_model, num_labels=args_dataset.num_args_types
 ).to(device)
+
+if refine:
+    model_data = torch.load(base_model, map_location=device)
+    model.load_state_dict(model_data)
 
 optimizer = AdamW(model.parameters(), lr=2e-5)
 
@@ -225,11 +254,11 @@ for epoch in range(num_train_epochs):
     )
 
     # Save and upload
-    event_filename = f"{path}/model_{epoch}.pt"
+    args_filename = f"{path}/model_{epoch}_p{results['overall_precision']:.4f}_r{results['overall_recall']:.4f}_f{results['overall_f1']:.4f}.pt"
     accelerator.wait_for_everyone()
     unwrapped_model = accelerator.unwrap_model(model)
-    unwrapped_model.save_pretrained(event_filename, save_function=accelerator.save)
+    unwrapped_model.save_pretrained(args_filename, save_function=accelerator.save)
     if accelerator.is_main_process:
-        tokenizer.save_pretrained(event_filename)
+        tokenizer.save_pretrained(args_filename)
 
-    print("Model saved to:", event_filename)
+    print("Model saved to:", args_filename)

@@ -1,4 +1,5 @@
 # predict the input text with the trained model
+import argparse
 import json
 import os
 import time
@@ -16,6 +17,33 @@ from arguments_dataset2 import ArgumentsDataset
 from event_dataset2 import EventDataset
 from datasets import load_dataset
 from commonfn import convert_tokenoffset_to_charoffset
+
+parser = argparse.ArgumentParser(description="Train model on the FNDEE dataset")
+parser.add_argument(
+    "--event_model",
+    type=str,
+    default="../result/models/1688560366/model_35-5617.pt",
+    help="The trained event model path",
+)
+
+parser.add_argument(
+    "--args_model",
+    type=str,
+    default="../result/model_19/model_19.pt",
+    help="The trained arguments model path",
+)
+
+parser.add_argument(
+    "--test_file",
+    type=str,
+    default="./data/FNDEE_valid.json",
+    help="The file name of the test json file",
+)
+
+args = parser.parse_args()
+event_model_name = args.event_model
+arg_model_name = args.args_model
+test_file = args.test_file
 
 num_event_types = 17
 num_args_types = 23
@@ -36,7 +64,7 @@ event_model = EventExtractorClassifer(bert_ner_model, num_labels=num_event_types
 )
 event_model.load_state_dict(
     torch.load(
-        "../result/models/1688560366/model_35-5617.pt",
+        event_model_name,
         map_location=torch.device(device),
     )
 )
@@ -54,11 +82,11 @@ args_model = ArgumentsExtratorClassifer(
 ).to(device)
 args_model.load_state_dict(
     torch.load(
-        "../result/model_19/model_19.pt",
+        arg_model_name,
         map_location=torch.device(device),
     )
 )
-dataset = load_dataset("json", data_files="./data/FNDEE_valid.json")
+dataset = load_dataset("json", data_files=test_file)
 event_model.eval()
 args_model.eval()
 results = []  # store the results
@@ -202,15 +230,3 @@ if os.path.exists("../result/predict") is False:
 timestamp = str(int(time.time()))
 with open(f"../result/predict/results_{timestamp}.json", "w", encoding="utf-8") as f:
     json.dump(results, f, indent=4, ensure_ascii=False)
-
-# # remove the B- prefix and I- prefix
-# args_predicted_labels = [
-#     label.replace("B-", "").replace("I-", "") for label in args_predicted_labels
-# ]
-
-# classified_args = [
-#     (args_predicted_labels[i], args_tokens[i], inputs["offset_mapping"][i])
-#     for i in range(len(args_tokens))
-#     if args_predicted_labels[i] != "O"
-# ]
-# # print(" ".join([f"{token}/{label}" for token, label in zip(args_tokens, args_predicted_labels)]))

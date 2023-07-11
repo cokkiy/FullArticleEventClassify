@@ -35,7 +35,7 @@
             "console": "integratedTerminal",
             "justMyCode": true,
             "args": [
-                "--train_file","./data/dstest.json",
+                "--train_file","./data/FNDEE_train1.json",
                 "--batch_size","4",
                 "--num_epochs","5"
             ]
