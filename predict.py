@@ -253,3 +253,4 @@ if os.path.exists("../result/predict") is False:
 timestamp = str(int(time.time()))
 with open(f"../result/predict/results_{timestamp}.json", "w", encoding="utf-8") as f:
     json.dump(results, f, indent=4, ensure_ascii=False)
+print(f"predicted result saved to ../result/predict/results_{timestamp}.json")
