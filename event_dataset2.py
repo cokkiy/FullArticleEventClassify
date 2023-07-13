@@ -179,7 +179,7 @@ class EventDataset:
                     and label == 0
                 ):
                     examples["input_ids"][idx][label_idx] = self.mask_id
-                    examples["attention_mask"][idx][label_idx] = 0
+                    # examples["attention_mask"][idx][label_idx] = 0
                     masked_num += 1
         if remove_columns:
             self.__remove_columns__(examples)

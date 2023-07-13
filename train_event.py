@@ -59,9 +59,9 @@ parser.add_argument(
 )
 
 parser.add_argument(
-    "--short_circle",
-    type=bool,
-    default=True,
+    "--disable_short_circle",
+    default=False,
+    action="store_true",
     help="Short circle the bert model last two hidden states (default: True)",
 )
 
@@ -73,9 +73,9 @@ parser.add_argument(
 )
 
 parser.add_argument(
-    "--replace",
-    type=bool,
-    default=True,
+    "--disable_replace",
+    action="store_true",
+    default=False,
     help="Replace the argument's text with the same type event and same argument role text  (default: True)",
 )
 
@@ -128,9 +128,9 @@ valid_file = args.valid_file
 batch_size = args.batch_size
 bert_name = args.bert_model
 num_epochs = args.num_epochs
-short_circle = args.short_circle
+disable_short_circle = args.disable_short_circle
 mask = args.mask
-replace = args.replace
+disable_replace = args.disable_replace
 mask_ratio = args.mask_ratio
 replace_ratio = args.replace_ratio
 max_replace_num = args.max_replace_num
@@ -142,9 +142,9 @@ if refine and base_model is None:
     print("Please input the base model name to refine.")
     exit(-1)
 if refine:
-    path = f"{ args.path}_{short_circle}_m.{mask}.{mask_ratio}_r.{replace}.{max_replace_num}_refine_{base_model}_{timestamp}"
+    path = f"{ args.path}_{disable_short_circle}_m.{mask}.{mask_ratio}_r.{disable_replace}.{max_replace_num}_refine_{base_model}_{timestamp}"
 else:
-    path = f"{ args.path}_{short_circle}_m.{mask}.{mask_ratio}_r.{replace}.{max_replace_num}_{timestamp}"
+    path = f"{ args.path}_{disable_short_circle}_m.{mask}.{mask_ratio}_r.{disable_replace}.{max_replace_num}_{timestamp}"
 
 
 # create folder to save model
@@ -156,8 +156,8 @@ event_dataset = EventDataset(
     train_file,
     valid_file,
     tokenizer,
-    mask=mask,
-    replace=replace,
+    mask=True,
+    replace=False,
     mask_ratio=mask_ratio,
     replace_ratio=replace_ratio,
     max_replace_num=max_replace_num,
@@ -181,7 +181,9 @@ print("Loading pretrained model...")
 config = AutoConfig.from_pretrained(bert_name, output_hidden_states=True)
 bert_model = AutoModelForTokenClassification.from_pretrained(bert_name, config=config)
 model = EventExtractorClassifer(
-    bert_model, num_labels=event_dataset.num_event_types
+    bert_model,
+    num_labels=event_dataset.num_event_types,
+    short_circle=False,
 ).to(device)
 
 if refine:

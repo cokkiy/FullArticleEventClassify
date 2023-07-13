@@ -18,7 +18,7 @@ from event_dataset2 import EventDataset
 from datasets import load_dataset
 from commonfn import convert_tokenoffset_to_charoffset
 
-parser = argparse.ArgumentParser(description="Train model on the FNDEE dataset")
+parser = argparse.ArgumentParser(description="Predict test data with trained model")
 parser.add_argument(
     "--event_model",
     type=str,
@@ -59,9 +59,9 @@ bert_ner_model = AutoModelForTokenClassification.from_pretrained(
 tokenizer = AutoTokenizer.from_pretrained(bert_ner_name)
 
 # events prediction model
-event_model = EventExtractorClassifer(bert_ner_model, num_labels=num_event_types).to(
-    device
-)
+event_model = EventExtractorClassifer(
+    bert_ner_model, num_labels=num_event_types, short_circle=False
+).to(device)
 event_model.load_state_dict(
     torch.load(
         event_model_name,

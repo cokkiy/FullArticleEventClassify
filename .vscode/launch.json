@@ -37,7 +37,9 @@
             "args": [
                 "--train_file","./data/FNDEE_train1.json",
                 "--batch_size","4",
-                "--num_epochs","5"
+                "--num_epochs","5",
+                "--disable_short_circle", 
+                "--disable_replace",
             ]
         },
         {
@@ -63,6 +65,10 @@
             "program": "predict.py",
             "console": "integratedTerminal",
             "justMyCode": true,
+            "args": [
+                "--event_model",
+                "../result/models-event_False_m.True.0.3_r.False.3_1689226175/model_49_p0.6838_r0.4712_f0.5579.pt"
+            ]
         }
     ]
 }
