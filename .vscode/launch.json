@@ -67,7 +67,7 @@
             "justMyCode": true,
             "args": [
                 "--event_model",
-                "../result/models-event_False_m.True.0.3_r.False.3_1689226175/model_49_p0.6838_r0.4712_f0.5579.pt"
+                "../result/lu/ent_model.pth"
             ]
         }
     ]

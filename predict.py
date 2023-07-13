@@ -9,6 +9,7 @@ from transformers import (
     AutoModelForMaskedLM,
     AutoModelForTokenClassification,
     AutoConfig,
+    BertModel,
 )
 from ArgumentsExtratorClassifer import ArgumentsExtratorClassifer
 
@@ -17,12 +18,13 @@ from arguments_dataset2 import ArgumentsDataset
 from event_dataset2 import EventDataset
 from datasets import load_dataset
 from commonfn import convert_tokenoffset_to_charoffset
+from GlobalExtractor import EffiGlobalExtractor as GlobalExtractor
 
 parser = argparse.ArgumentParser(description="Predict test data with trained model")
 parser.add_argument(
     "--event_model",
     type=str,
-    default="../result/models/1688560366/model_35-5617.pt",
+    default="../result/lu/ent_model.pth",
     help="The trained event model path",
 )
 
@@ -47,21 +49,23 @@ test_file = args.test_file
 
 num_event_types = 17
 num_args_types = 23
+event_bert_name = "../models/roberta_wwm"
 bert_ner_name = "../models/xlm-roberta-base-ner-hrl"
 bert_name = "../models/xlm-roberta-base"
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 config = AutoConfig.from_pretrained(bert_ner_name, output_hidden_states=True)
-bert_ner_model = AutoModelForTokenClassification.from_pretrained(
-    bert_ner_name, config=config
-).to(device)
-tokenizer = AutoTokenizer.from_pretrained(bert_ner_name)
+bert_model = BertModel.from_pretrained(event_bert_name).to(device)
+tokenizer = AutoTokenizer.from_pretrained(event_bert_name)
+
+# 事件类型数量
+ENT_CLS_NUM = 9
+# 事件普通论元数量
+ARGUMENT_CLS_NUM = 11
 
 # events prediction model
-event_model = EventExtractorClassifer(
-    bert_ner_model, num_labels=num_event_types, short_circle=False
-).to(device)
+event_model = GlobalExtractor(bert_model, ENT_CLS_NUM, ARGUMENT_CLS_NUM, 64).to(device)
 event_model.load_state_dict(
     torch.load(
         event_model_name,
