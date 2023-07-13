@@ -164,7 +164,7 @@ for sample in dataset["train"]:
             "event_type": label,
             "trigger": {
                 "text": trigger_text,
-                "offset": [start_idx, end_idx],
+                "offset": [int(start_idx), int(end_idx)],
             },
             "arguments": [],
         }
@@ -227,13 +227,13 @@ for sample in dataset["train"]:
                             "role": current_arg_type,
                             "text": current_arg_text,
                             "offset": [
-                                current_arg_start_idx
+                                int(current_arg_start_idx)
                                 - len(
                                     prompt_text
                                 )  # should minus len of prompt text because we need the offset in the original text
                                 - 2  # should minus 2 because of [CLS] and [SEP]
                                 - 5,  # don't know why, but it works
-                                current_arg_start_idx
+                                int(current_arg_start_idx)
                                 - len(prompt_text)
                                 - 2
                                 - 5
